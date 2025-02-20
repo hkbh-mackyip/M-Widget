@@ -1,30 +1,18 @@
-from kivymd.uix.screen import MDScreen
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.screenmanager import Screen
 from kivymd.uix.label import MDLabel
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.toolbar import MDTopAppBar
 
-class MainView(MDScreen):
-    def __init__(self, controller, **kwargs):
+class MainView(Screen):
+    def __init__(self, app, **kwargs):
         super().__init__(**kwargs)
-        self.controller = controller
-        self.build_ui()
+        layout = BoxLayout(orientation='vertical')
 
-    def build_ui(self):
-        layout = MDBoxLayout(orientation='vertical', padding=0, spacing=0)
+        # Use the function to create the top app bar
+        top_app_bar = app.create_top_app_bar("Home Page")
+        layout.add_widget(top_app_bar)
 
-        # Create the toolbar
-        toolbar = MDTopAppBar(title="M Widget")
-        toolbar.pos_hint = {"top": 1}
-        layout.add_widget(toolbar)
-
-        # Create the label
-        message = self.controller.get_message()
-        label = MDLabel(
-            text=message,
-            halign="center",
-            theme_text_color="Primary",
-            font_style="H4"
-        )
-        layout.add_widget(label)
-
+        # >>>>>>>>>> Page Content >>>>>>>>>>
+        layout.add_widget(MDLabel(text="This is the Home Page", halign="center", font_style='H5'))
+        # <<<<<<<<<< Page Content <<<<<<<<<<
+        
         self.add_widget(layout)

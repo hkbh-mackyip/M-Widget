@@ -1,0 +1,61 @@
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.boxlayout import BoxLayout
+from kivymd.app import MDApp
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.label import MDLabel
+from kivymd.uix.navigationdrawer import MDNavigationLayout, MDNavigationDrawer, MDNavigationDrawerMenu, MDNavigationDrawerHeader, MDNavigationDrawerDivider, MDNavigationDrawerItem, MDNavigationDrawerLabel
+from kivymd.uix.toolbar import MDTopAppBar
+
+from main_view import MainView  # Import the HomeScreen class
+
+class BaseView(MDApp):
+    def build(self):
+        self.navigation_drawer = MDNavigationDrawer(
+            MDNavigationDrawerMenu(
+                MDNavigationDrawerHeader(
+                    title="Menu",
+                    spacing="4dp",
+                    padding=("12dp", 0, 0, "56dp"),
+                ),
+                MDNavigationDrawerDivider(),
+                MDNavigationDrawerItem(
+                    icon="home-outline",
+                    text="Home",
+                    on_release=lambda x: self.change_screen("home"),
+                ),
+                MDNavigationDrawerDivider(),
+                MDNavigationDrawerItem(
+                    icon="wrench-cog-outline",
+                    text="Setup",
+                    on_release=lambda x: self.change_screen("home"),
+                ),
+                MDNavigationDrawerDivider(),
+            ),
+            id="main_navigation_drawer",
+            radius=(0, 16, 16, 0),
+        )
+        
+        # Create the screen manager
+        self.screen_manager = ScreenManager()
+        self.screen_manager.add_widget(MainView(name="home", app=self))
+
+        # Combine everything into a layout
+        layout = MDNavigationLayout()
+        layout.add_widget(self.screen_manager)
+        layout.add_widget(self.navigation_drawer)
+
+        return layout
+
+    def change_screen(self, screen_name):
+        self.navigation_drawer.set_state("close")
+        self.screen_manager.current = screen_name
+
+    def create_top_app_bar(self, title):
+        top_app_bar = MDTopAppBar(title=title)
+        top_app_bar.left_action_items = [["menu", lambda x: self.navigation_drawer.set_state("toggle")]]
+        return top_app_bar
+
+
+
+if __name__ == "__main__":
+    BaseView().run()
